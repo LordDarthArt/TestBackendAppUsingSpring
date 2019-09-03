@@ -20,8 +20,7 @@ import javax.sql.DataSource;
 
 @Service
 public class MiniUniversityTestImpl implements MiniUniversityService {
-
-	@Autowired
+	
 	private MiniUniversityRepository muRepository;
 	private JdbcTemplate jtm = new JdbcTemplate();
 
@@ -33,12 +32,17 @@ public class MiniUniversityTestImpl implements MiniUniversityService {
 		this.jtm = new JdbcTemplate(dataSource);
 	}
 
+	@Autowired
 	public void setMuRepository(MiniUniversityRepository muRepository) {
 		this.muRepository = muRepository;
 	}
 
 	public void setJtm(JdbcTemplate jtm) {
 		this.jtm = jtm;
+	}
+
+	public MiniUniversityRepository getMuRepository() {
+		return muRepository;
 	}
 
 	@Override
@@ -136,5 +140,4 @@ public class MiniUniversityTestImpl implements MiniUniversityService {
 		}
 		return jsonArray;
 	}
-
 }

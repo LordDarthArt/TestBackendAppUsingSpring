@@ -8,7 +8,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableSwagger2
-@ComponentScan(basePackages = "com.example.testBackend")
 public class TestBackendApplication {
 
 	public static void main(String[] args) {

@@ -1,86 +1,102 @@
 package com.example.testBackend.controller;
 
-import java.sql.SQLException;
-
+import com.example.testBackend.jsps.MiniUniversityCreateGroupJSP;
+import com.example.testBackend.repository.MiniUniversityRepository;
 import com.example.testBackend.service.MiniUniversityService;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.bind.annotation.*;
-
-import com.example.testBackend.entity.MiniUniversityEntity;
-import com.example.testBackend.jsps.MiniUniversityCreateGroupJSP;
-import com.example.testBackend.repository.MiniUniversityRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.sql.DataSource;
+import java.sql.SQLException;
 
 @RestController
 public class MiniUniversityTestController {
 
-	@Autowired
-	private MiniUniversityService muService;
-	private MiniUniversityRepository muRepo;
-	private MiniUniversityCreateGroupJSP jsp;
-	private DataSource dataSource;
-	private JdbcTemplate jtm;
+    private MiniUniversityService muService;
+    private MiniUniversityRepository muRepo;
+    private DataSource dataSource;
+    private JdbcTemplate jtm;
 
-	public void setMUService(MiniUniversityService muService) {
-		this.muService = muService;
-	}
+    @Autowired
+    public void setMUService(MiniUniversityService muService) {
+        this.muService = muService;
+    }
 
-	public void setJtm(JdbcTemplate jtm) {
-		this.jtm = jtm;
-	}
+    public DataSource getDataSource() {
+        return dataSource;
+    }
 
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
+    public JdbcTemplate getJtm() {
+        return jtm;
+    }
 
-	@GetMapping("/")
-	public String home() {
-		jsp = new MiniUniversityCreateGroupJSP();
-		return jsp.jsp();
-	}
+    public void setJtm(JdbcTemplate jtm) {
+        this.jtm = jtm;
+    }
 
-	@GetMapping("/miniuniversity/getStuds")
-	public JSONObject getMu() throws SQLException {
-		JSONObject mu = muService.retrieveStudents();
-		return mu;
-	}
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
-	@GetMapping("/miniuniversity/getStudById")
-	public JSONObject getStudentById(@RequestParam(name="id", defaultValue = "0") Integer id) throws SQLException {
-		return muService.getStudentById(id);
-	}
+    @GetMapping("/")
+    public String home() {
+        MiniUniversityCreateGroupJSP jsp = new MiniUniversityCreateGroupJSP();
+        return jsp.jsp();
+    }
 
-	@RequestMapping("/miniuniversity/creategroup")
-	public JSONObject createGroup(@RequestParam(name="name") String[] students,@RequestParam(name="age") String[] age,@RequestParam(name="group") String group) throws SQLException {
-		JSONObject mu = muService.createGroup(students, age, group);
-		return mu;
-	}
+    @GetMapping("/miniuniversity/getStuds")
+    public JSONObject getMu() throws SQLException {
+        return muService.retrieveStudents();
+    }
 
-	@GetMapping("/miniuniversity/groups")
-	public JSONArray getTeachersGroup(@RequestParam(name="teacher", defaultValue = "") String teacher) throws SQLException {
-		JSONArray mu = muService.getTeachersGroup(teacher);
-		return mu;
-	}
+    @GetMapping("/miniuniversity/getStudById")
+    public JSONObject getStudentById(
+            @RequestParam(name = "id", defaultValue = "0") Integer id
+    ) throws SQLException {
+        return muService.getStudentById(id);
+    }
 
-	@GetMapping("/miniuniversity/teachers")
-	public JSONArray getStudentsTeacher(@RequestParam(name="stud", defaultValue = "") String stud) throws SQLException {
-		JSONArray mu = muService.getStudentsTeacher(stud);
-		return mu;
-	}
+    @RequestMapping("/miniuniversity/creategroup")
+    public JSONObject createGroup(
+            @RequestParam(name = "name") String[] students,
+            @RequestParam(name = "age") String[] age,
+            @RequestParam(name = "group") String group
+    ) throws SQLException {
+        return muService.createGroup(students, age, group);
+    }
 
-	@RequestMapping("/miniuniversity/studsbygroup")
-	public JSONArray getStudentsByGroup(@RequestParam(name="group", defaultValue = "") String group) throws SQLException {
-		JSONArray mu = muService.getStudentsByGroup(group);
-		return mu;
-	}
+    @GetMapping("/miniuniversity/groups")
+    public JSONArray getTeachersGroup(
+            @RequestParam(name = "teacher", defaultValue = "") String teacher
+    ) throws SQLException {
+        return muService.getTeachersGroup(teacher);
+    }
 
-	@RequestMapping("/miniuniversity/teachtogroup")
-	public JSONObject setTeacherToGroup(@RequestParam(name="teacher", defaultValue = "") String teacher, @RequestParam(name="group", defaultValue = "") String group) throws SQLException {
-		JSONObject mu = muService.setTeacherToGroup(teacher, group);
-		return mu;
-	}
+    @GetMapping("/miniuniversity/teachers")
+    public JSONArray getStudentsTeacher(
+            @RequestParam(name = "stud", defaultValue = "") String stud
+    ) throws SQLException {
+        return muService.getStudentsTeacher(stud);
+    }
+
+    @RequestMapping("/miniuniversity/studsbygroup")
+    public JSONArray getStudentsByGroup(
+            @RequestParam(name = "group", defaultValue = "") String group
+    ) throws SQLException {
+        return muService.getStudentsByGroup(group);
+    }
+
+    @RequestMapping("/miniuniversity/teachtogroup")
+    public JSONObject setTeacherToGroup(
+            @RequestParam(name = "teacher", defaultValue = "") String teacher,
+            @RequestParam(name = "group", defaultValue = "") String group
+    ) throws SQLException {
+        return muService.setTeacherToGroup(teacher, group);
+    }
 }
