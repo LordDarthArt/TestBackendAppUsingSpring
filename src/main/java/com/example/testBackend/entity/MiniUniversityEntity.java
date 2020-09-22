@@ -1,5 +1,7 @@
 package com.example.testBackend.entity;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,57 +10,26 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "MINIUNIVERSITY")
+@Table(name = "news")
 public class MiniUniversityEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	@Column(name = "NAME")
-	private String name;
-	@Column(name = "AGE")
-	private Integer age;
-	@Column(name = "GROUPS")
-	private String groups;
-	@Column(name = "TEACHER")
-	private String teacher;
+	@Column(name = "title", length = 999999999)
+	private String title;
+	@Column(name = "desc", length = 999999999)
+	private String desc;
+	@Column(name = "date", length = 999999999)
+	private String date;
+	@Column(name = "pic", length = 999999999)
+	private String pic;
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getGroups() {
-		return groups;
-	}
-
-	public void setGroups(String groups) {
-		this.groups = groups;
-	}
-
-	public String getTeacher() {
-		return teacher;
-	}
-
-	public void setTeacher(String teacher) {
-		this.teacher = teacher;
-	}
-
-	public Integer getAge() {
-		return age;
-	}
-
-	public void setAge(Integer age) {
-		this.age = age;
-	}
+	public String getTitle() { return title; }
+	public void setTitle(String title) { this.title = title; }
+	public String getDesc() { return desc; }
+	public void setDesc(String desc) { this.desc = desc; }
+	public String getDate() { return date; }
+	public void setDate(String date) { this.date = date; }
+	public String getPic() { return pic; }
+	public void setPic(String pic) { this.pic = pic; }
 }

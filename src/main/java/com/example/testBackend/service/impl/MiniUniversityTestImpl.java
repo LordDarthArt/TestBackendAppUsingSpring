@@ -47,16 +47,16 @@ public class MiniUniversityTestImpl implements MiniUniversityService {
 
 	@Override
 	public JSONObject retrieveStudents() throws SQLException {
-		String sql = "select DISTINCT NAME, AGE from miniuniversity";
-		new FillTheEmpty().furfill(jtm);
+		String sql = "SELECT DISTINCT NAME, AGE FROM NEWS";
+		FillTheEmpty.furfill(jtm);
 		jsonObject.put("STUDENTS", jtm.query(sql, new ColumnMapRowMapper()));
 		return jsonObject;
 	}
 
 	@Override
 	public JSONObject getStudentById(Integer id) throws SQLException {
-		new FillTheEmpty().furfill(jtm);
-		String sql = "SELECT DISTINCT NAME FROM MINIUNIVERSITY WHERE ID=?";
+		FillTheEmpty.furfill(jtm);
+		String sql = "SELECT DISTINCT NAME FROM NEWS WHERE ID=?";
 		jsonObject.put("NAME", jtm.query(sql, new Object[] {id}, new ColumnMapRowMapper()).get(0).get("name"));
 		return jsonObject;
 	}
@@ -64,7 +64,7 @@ public class MiniUniversityTestImpl implements MiniUniversityService {
 	@Override
 	public JSONObject setTeacherToGroup(String teacher, String group) throws SQLException {
 		jsonObject.clear();
-		new FillTheEmpty().furfill(jtm);
+		FillTheEmpty.furfill(jtm);
 		String sqlFirst = "UPDATE MINIUNIVERSITY SET TEACHER=? WHERE GROUPS=?";
 		jtm.update(sqlFirst, new Object[] { teacher, group });
 		String sqlSecond = "SELECT DISTINCT TEACHER, GROUPS FROM MINIUNIVERSITY WHERE TEACHER=? AND GROUPS=?";
@@ -83,7 +83,7 @@ public class MiniUniversityTestImpl implements MiniUniversityService {
 			for (int i=0; i<students.length; i++) {
 				jtm.update(sqlFirst, new Object[]{students[i], age[i], group});
 			}
-			String sqlSecond = "SELECT NAME, AGE, GROUPS FROM MINIUNIVERSITY WHERE NAME=? AND AGE=? AND GROUPS=?";
+			String sqlSecond = "SELECT NAME, AGE, GROUPS FROM NEWS WHERE NAME=? AND AGE=? AND GROUPS=?";
 			for (int i=0; i<students.length; i++) {
 				JSONObject jsonka = new JSONObject();
 				jsonka.put("NAME", (jtm.query(sqlSecond, new Object[]{students[i], age[i], group}, new ColumnMapRowMapper()).get(0).get("NAME")));
@@ -101,8 +101,8 @@ public class MiniUniversityTestImpl implements MiniUniversityService {
 	@Override
 	public JSONArray getTeachersGroup(String teacher) throws SQLException {
 		jsonArray.clear();
-		String sql = "SELECT DISTINCT GROUPS FROM MINIUNIVERSITY WHERE TEACHER=? ORDER BY GROUPS";
-		new FillTheEmpty().furfill(jtm);
+		String sql = "SELECT DISTINCT GROUPS FROM NEWS WHERE TEACHER=? ORDER BY GROUPS";
+		FillTheEmpty.furfill(jtm);
 		jtm.query(sql, new Object[] { teacher }, new ColumnMapRowMapper());
 		for (int i=0; i<(jtm.query(sql, new Object[]{teacher}, new ColumnMapRowMapper()).size()); i++) {
 			JSONObject jsonObjectd = new JSONObject();
@@ -115,8 +115,8 @@ public class MiniUniversityTestImpl implements MiniUniversityService {
 	@Override
 	public JSONArray getStudentsByGroup(String group) throws SQLException {
 		jsonArray.clear();
-		String sql = "SELECT DISTINCT NAME, AGE FROM MINIUNIVERSITY WHERE GROUPS=? ORDER BY NAME";
-		new FillTheEmpty().furfill(jtm);
+		String sql = "SELECT DISTINCT NAME, AGE FROM NEWS WHERE GROUPS=? ORDER BY NAME";
+		FillTheEmpty.furfill(jtm);
 		for (int i=0; i<(jtm.query(sql, new Object[]{group}, new ColumnMapRowMapper()).size()); i++) {
 			JSONObject jsonObjectd = new JSONObject();
 			jsonObjectd.put("NAME", String.valueOf(jtm.query(sql, new Object[]{group}, new ColumnMapRowMapper()).get(i).get("NAME")));
@@ -129,14 +129,37 @@ public class MiniUniversityTestImpl implements MiniUniversityService {
 	@Override
 	public JSONArray getStudentsTeacher(String student) throws SQLException {
 		jsonArray.clear();
-		String sql = "SELECT DISTINCT TEACHER FROM MINIUNIVERSITY WHERE NAME=?";
-		new FillTheEmpty().furfill(jtm);
+		String sql = "SELECT DISTINCT TEACHER FROM NEWS WHERE NAME=?";
+		FillTheEmpty.furfill(jtm);
 		ArrayList<String> teachers = new ArrayList<>();
 		for (int i=0; i<(jtm.query(sql, new Object[]{student}, new ColumnMapRowMapper()).size()); i++) {
 			JSONObject jsonObjecd = new JSONObject();
 			teachers.add(String.valueOf(jtm.query(sql, new Object[]{student}, new ColumnMapRowMapper()).get(i).get("TEACHER")));
 			jsonObjecd.put("TEACHER", teachers.get(i));
 			jsonArray.add(i, jsonObjecd);
+		}
+		return jsonArray;
+	}
+
+	@Override
+	public JSONArray getAll() throws SQLException {
+		jsonArray.clear();
+		String sql = "SELECT * FROM NEWS";
+		FillTheEmpty.furfill(jtm);
+		ArrayList<MiniUniversityEntity> entities = new ArrayList();
+		for (int i=0; i<(jtm.query(sql, new ColumnMapRowMapper()).size()); i++) {
+			JSONObject jsonObject = new JSONObject();
+			MiniUniversityEntity entity = new MiniUniversityEntity();
+			entity.setTitle((String) jtm.query(sql, new ColumnMapRowMapper()).get(i).get("title"));
+			entity.setDesc((String) jtm.query(sql, new ColumnMapRowMapper()).get(i).get("desc"));
+			entity.setDate((String) jtm.query(sql, new ColumnMapRowMapper()).get(i).get("date"));
+			entity.setPic((String) jtm.query(sql, new ColumnMapRowMapper()).get(i).get("pic"));
+			entities.add(entity);
+			jsonObject.put("tittle", entity.getTitle());
+			jsonObject.put("desc", entity.getDesc());
+			jsonObject.put("date", entity.getDate());
+			jsonObject.put("pic", entity.getPic());
+			jsonArray.add(i, jsonObject);
 		}
 		return jsonArray;
 	}

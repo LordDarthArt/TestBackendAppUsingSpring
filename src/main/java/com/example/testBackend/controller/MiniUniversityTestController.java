@@ -1,6 +1,5 @@
 package com.example.testBackend.controller;
 
-import com.example.testBackend.jsps.MiniUniversityCreateGroupJSP;
 import com.example.testBackend.repository.MiniUniversityRepository;
 import com.example.testBackend.service.MiniUniversityService;
 import net.minidev.json.JSONArray;
@@ -45,9 +44,10 @@ public class MiniUniversityTestController {
     }
 
     @GetMapping("/")
-    public String home() {
-        MiniUniversityCreateGroupJSP jsp = new MiniUniversityCreateGroupJSP();
-        return jsp.jsp();
+    public JSONObject home() throws SQLException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("news", muService.getAll());
+        return jsonObject;
     }
 
     @GetMapping("/miniuniversity/getStuds")

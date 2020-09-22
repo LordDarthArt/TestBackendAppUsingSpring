@@ -1,1 +1,1 @@
-INSERT INTO MINIUNIVERSITY VALUES (1, 'fckdrm', 'codex', 'voksi');
+INSERT INTO NEWS VALUES ("", "", ""), (), ();
